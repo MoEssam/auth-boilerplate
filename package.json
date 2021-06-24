@@ -1,0 +1,23 @@
+{
+  "name": "auth-boilerplate",
+  "version": "1.0.0",
+  "description": "Boilerplate Authentication System",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moessam/auth-boilerplate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moessam/auth-boilerplate/issues"
+  },
+  "homepage": "https://github.com/moessam/auth-boilerplate#readme"
+}
