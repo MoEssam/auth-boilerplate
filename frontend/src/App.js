@@ -9,11 +9,17 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const handleLogout = () => {
+    myStorage.removeItem("user");
+    setCurrentUser(null);
+  };
 
   return (
     <div>
       {currentUser ? (
-        <button className="button logout">Log Out</button>
+        <button className="button logout" onClick={handleLogout}>
+          Log Out
+        </button>
       ) : (
         <div className="buttons">
           <button className="button login" onClick={() => setShowLogin(true)}>
