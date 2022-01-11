@@ -1,8 +1,10 @@
 import * as React from "react";
 import "./app.css";
 import { useState } from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const myStorage = window.localStorage;
@@ -15,33 +17,48 @@ function App() {
   };
 
   return (
-    <div>
-      {currentUser ? (
-        <button className="button logout" onClick={handleLogout}>
-          Log Out
-        </button>
-      ) : (
-        <div className="buttons">
-          <button className="button login" onClick={() => setShowLogin(true)}>
-            Login
-          </button>
-          <button
-            className="button register"
-            onClick={() => setShowRegister(true)}
-          >
-            Register
-          </button>
-        </div>
-      )}
-      {showRegister && <Register setShowRegister={setShowRegister} />}
-      {showLogin && (
-        <Login
-          setShowLogin={setShowLogin}
-          myStorage={myStorage}
-          setCurrentUser={setCurrentUser}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/"
+          element={
+            <div>
+              {currentUser ? (
+                <button className="button logout" onClick={handleLogout}>
+                  Log Out
+                </button>
+              ) : (
+                <div className="buttons">
+                  <button
+                    className="button login"
+                    onClick={() => setShowLogin(true)}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className="button register"
+                    onClick={() => setShowRegister(true)}
+                  >
+                    Register
+                  </button>
+                </div>
+              )}
+              {showRegister && <Register setShowRegister={setShowRegister} />}
+              {showLogin && (
+                <Login
+                  setShowLogin={setShowLogin}
+                  myStorage={myStorage}
+                  setCurrentUser={setCurrentUser}
+                />
+              )}
+            </div>
+          }
         />
-      )}
-    </div>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
