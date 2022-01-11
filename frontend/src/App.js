@@ -33,7 +33,7 @@ function App() {
           </button>
         </div>
       )}
-      {showRegister && <Register setShowRegister={setShowRegister} />}
+      {showRegister && <Register />}
       {showLogin && (
         <Login
           setShowLogin={setShowLogin}

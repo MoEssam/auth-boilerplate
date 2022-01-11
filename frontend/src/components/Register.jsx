@@ -1,52 +1,112 @@
-import "./register.css";
-import { Cancel, Room } from "@material-ui/icons";
-import { useRef, useState } from "react";
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 
-export default function Register({ setShowRegister }) {
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
-  const usernameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
+const theme = createTheme();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+export default function SignUp() {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
     const newUser = {
-      username: usernameRef.current.value,
-      email: emailRef.current.value,
-      password: passwordRef.current.value,
+      username: data.get("username"),
+      email: data.get("email"),
+      password: data.get("password"),
     };
-
     try {
       await axios.post("/users/register", newUser);
-      setError(false);
-      setSuccess(true);
+      alert("Success");
     } catch (err) {
-      setError(true);
+      console.log(err);
     }
   };
 
   return (
-    <div className="registerContainer">
-      <div className="logo">
-        <Room />
-        Register Page
-      </div>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="username" ref={usernameRef}></input>
-        <input type="email" placeholder="email" ref={emailRef}></input>
-        <input type="password" placeholder="password" ref={passwordRef}></input>
-        <button className="registerBtn"> Register</button>
-        {success && (
-          <span className="success">Successfull. You can login now!</span>
-        )}
-        {error && <span className="failure">Something went wrong!</span>}
-      </form>
-      <Cancel
-        className="registerCancel"
-        onClick={() => setShowRegister(false)}
-      />
-    </div>
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  autoComplete="given-name"
+                  name="username"
+                  required
+                  fullWidth
+                  id="username"
+                  label="username"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/login" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
