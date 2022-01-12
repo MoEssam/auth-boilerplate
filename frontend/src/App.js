@@ -46,16 +46,17 @@ function App() {
               )}
               {showRegister && <Register setShowRegister={setShowRegister} />}
               {showLogin && (
-                <Login
-                  setShowLogin={setShowLogin}
-                  myStorage={myStorage}
-                  setCurrentUser={setCurrentUser}
-                />
+                <Login myStorage={myStorage} setCurrentUser={setCurrentUser} />
               )}
             </div>
           }
         />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <Login myStorage={myStorage} setCurrentUser={setCurrentUser} />
+          }
+        />
         <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>

@@ -13,10 +13,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
-export default function SignIn({ setShowLogin, myStorage, setCurrentUser }) {
+export default function SignIn({ myStorage, setCurrentUser }) {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -24,13 +27,12 @@ export default function SignIn({ setShowLogin, myStorage, setCurrentUser }) {
       username: data.get("username"),
       password: data.get("password"),
     };
-    console.log(user);
     try {
       const res = await axios.post("/users/login", user);
       myStorage.setItem("user", res.data.user.username);
       myStorage.setItem("token", res.data.token);
       setCurrentUser(res.data.user.username);
-      setShowLogin(false);
+      navigate("dashboard");
     } catch (err) {
       console.log(err);
     }
