@@ -29,7 +29,7 @@ function App() {
           path="/"
           element={
             <div>
-              {currentUser ? (
+              {/* {currentUser ? (
                 <button className="button logout" onClick={handleLogout}>
                   Log Out
                 </button>
@@ -48,11 +48,12 @@ function App() {
                     Register
                   </button>
                 </div>
-              )}
-              {showRegister && <Register setShowRegister={setShowRegister} />}
+              )} */}
+              {/* {showRegister && <Register setShowRegister={setShowRegister} />}
               {showLogin && (
                 <Login myStorage={myStorage} setCurrentUser={setCurrentUser} />
-              )}
+              )} */}
+              This is the Homepage
             </div>
           }
         />

@@ -32,7 +32,7 @@ export default function SignIn({ myStorage, setCurrentUser }) {
       myStorage.setItem("user", res.data.user.username);
       myStorage.setItem("token", res.data.token);
       setCurrentUser(res.data.user.username);
-      navigate("dashboard");
+      navigate("/dashboard");
     } catch (err) {
       console.log(err);
     }

@@ -11,11 +11,13 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
+  const navigate = useNavigate();
   const currentUser = myStorage.getItem("user");
   console.log("current user is: ", currentUser);
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -27,6 +29,13 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
     setCurrentUser(null);
   };
 
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const handleDashboard = () => {
+    navigate("/dashboard");
+  };
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -134,7 +143,9 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
               onClose={handleCloseUserMenu}
             >
               <MenuItem>
-                <Typography textAlign="center">Dashboard</Typography>
+                <Typography textAlign="center" onClick={handleDashboard}>
+                  Dashboard
+                </Typography>
               </MenuItem>
               {currentUser ? (
                 <MenuItem>
@@ -144,7 +155,9 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
                 </MenuItem>
               ) : (
                 <MenuItem>
-                  <Typography textAlign="center">Login</Typography>
+                  <Typography textAlign="center" onClick={handleLogin}>
+                    Login
+                  </Typography>
                 </MenuItem>
               )}
 
