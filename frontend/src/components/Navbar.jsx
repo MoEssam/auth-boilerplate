@@ -14,7 +14,6 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
   const navigate = useNavigate();
@@ -29,13 +28,6 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
     setCurrentUser(null);
   };
 
-  const handleLogin = () => {
-    navigate("/login");
-  };
-
-  const handleDashboard = () => {
-    navigate("/dashboard");
-  };
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -143,35 +135,42 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
               onClose={handleCloseUserMenu}
             >
               <MenuItem>
-                <Typography textAlign="center" onClick={handleDashboard}>
+                <Typography
+                  textAlign="center"
+                  onClick={() => {
+                    navigate("/dashboard");
+                    handleCloseUserMenu();
+                  }}
+                >
                   Dashboard
                 </Typography>
               </MenuItem>
               {currentUser ? (
                 <MenuItem>
-                  <Typography textAlign="center" onClick={handleLogout}>
+                  <Typography
+                    textAlign="center"
+                    onClick={() => {
+                      handleLogout();
+                      navigate("/");
+                      handleCloseUserMenu();
+                    }}
+                  >
                     Logout
                   </Typography>
                 </MenuItem>
               ) : (
                 <MenuItem>
-                  <Typography textAlign="center" onClick={handleLogin}>
+                  <Typography
+                    textAlign="center"
+                    onClick={() => {
+                      navigate("/login");
+                      handleCloseUserMenu();
+                    }}
+                  >
                     Login
                   </Typography>
                 </MenuItem>
               )}
-
-              {/* <MenuItem>
-                <Typography textAlign="center">Login</Typography>
-              </MenuItem>
-              <MenuItem>
-                <Typography textAlign="center">Register</Typography>
-              </MenuItem> */}
-              {/* {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))} */}
             </Menu>
           </Box>
         </Toolbar>
