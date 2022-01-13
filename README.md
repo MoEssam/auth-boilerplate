@@ -35,3 +35,6 @@ go to localhost:3000
 - [ ] Linking exsiting users to their social accounts
 - [ ] Add profile photos
 - [ ] Update profile details
+- [ ] Admin functionality
+- [ ] Email Verification
+- [ ] SMS Verification
