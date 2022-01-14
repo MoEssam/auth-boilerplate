@@ -5,42 +5,51 @@ const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      require: true,
-      unique: true,
-    },
-    email: {
-      type: String,
-      require: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-      validate(value) {
-        if (!validtaor.isEmail(value)) {
-          throw new Error("Email is invalid!");
-        }
+    local: {
+      username: {
+        type: String,
+        require: true,
+        unique: true,
       },
-    },
-    password: {
-      type: String,
-      required: true,
-      min: 6,
-      trim: true,
-      validate(value) {
-        if (value.toLowerCase().includes("password")) {
-          throw new Error('Password cannot contain "password"');
-        }
-      },
-    },
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true,
+      email: {
+        type: String,
+        require: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        validate(value) {
+          if (!validtaor.isEmail(value)) {
+            throw new Error("Email is invalid!");
+          }
         },
       },
-    ],
+      password: {
+        type: String,
+        required: true,
+        min: 6,
+        trim: true,
+        validate(value) {
+          if (value.toLowerCase().includes("password")) {
+            throw new Error('Password cannot contain "password"');
+          }
+        },
+      },
+      tokens: [
+        {
+          token: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
+    },
+    google: {
+      googleId: String,
+      email: String,
+      token: String,
+      name: String,
+      profilePicture: String,
+    },
   },
   { timestamps: true }
 );
@@ -48,8 +57,8 @@ const userSchema = new mongoose.Schema(
 //Hash the plain text password before saving
 userSchema.pre("save", async function (next) {
   const user = this;
-  if (user.isModified("password")) {
-    user.password = await bcrypt.hash(user.password, 8);
+  if (user.isModified("local.password")) {
+    user.local.password = await bcrypt.hash(user.local.password, 8);
   }
   next();
 });
@@ -84,7 +93,7 @@ userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "topsecret");
 
-  user.tokens = user.tokens.concat({ token });
+  user.local.tokens = user.local.tokens.concat({ token });
   await user.save();
 
   return token;

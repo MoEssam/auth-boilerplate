@@ -19,10 +19,13 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const newUser = {
-      username: data.get("username"),
-      email: data.get("email"),
-      password: data.get("password"),
+      local: {
+        username: data.get("username"),
+        email: data.get("email"),
+        password: data.get("password"),
+      },
     };
+
     try {
       await axios.post("/users/register", newUser);
       alert("Success");
