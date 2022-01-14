@@ -14,11 +14,20 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import GoogleLogin from "react-google-login";
 
 const theme = createTheme();
 
 export default function SignIn({ myStorage, setCurrentUser }) {
   const navigate = useNavigate();
+
+  const googleSuccess = async (googleData) => {
+    console.log(googleData);
+  };
+
+  const googleFailure = async (res) => {
+    console.log(res);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -94,6 +103,13 @@ export default function SignIn({ myStorage, setCurrentUser }) {
             >
               Sign In
             </Button>
+            <GoogleLogin
+              clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+              buttonText="Sign in with Google"
+              onSuccess={googleSuccess}
+              onFailure={googleFailure}
+              cookiePolicy={"single_host_origin"}
+            />
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
