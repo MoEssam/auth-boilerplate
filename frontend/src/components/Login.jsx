@@ -22,7 +22,19 @@ export default function SignIn({ myStorage, setCurrentUser }) {
   const navigate = useNavigate();
 
   const googleSuccess = async (googleData) => {
-    console.log(googleData);
+    const data = {
+      token: googleData.tokenId,
+    };
+    try {
+      const res = await axios.post("/users/v1/auth/google", data);
+      const googleToken = JSON.parse(res.config.data);
+      myStorage.setItem("user", res.data.local.username);
+      myStorage.setItem("token", googleToken.token);
+      setCurrentUser(res.data.local.username);
+      navigate("/dashboard");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const googleFailure = async (res) => {
