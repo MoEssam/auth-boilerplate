@@ -27,11 +27,13 @@ export default function SignIn({ myStorage, setCurrentUser }) {
     };
     try {
       const res = await axios.post("/users/v1/auth/google", data);
-      const googleToken = JSON.parse(res.config.data);
-      myStorage.setItem("user", res.data.local.username);
-      myStorage.setItem("token", googleToken.token);
-      setCurrentUser(res.data.local.username);
-      navigate("/dashboard");
+      if (typeof res.data.local === "undefined") {
+        const googleToken = JSON.parse(res.config.data);
+        myStorage.setItem("user", res.data.newGoogleUser.google.name);
+        myStorage.setItem("token", googleToken.token);
+        setCurrentUser(res.data.newGoogleUser.google.name);
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.log(err);
     }
