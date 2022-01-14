@@ -47,14 +47,16 @@ export default function SignIn({ myStorage, setCurrentUser }) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const user = {
-      username: data.get("username"),
-      password: data.get("password"),
+      local: {
+        username: data.get("username"),
+        password: data.get("password"),
+      },
     };
     try {
       const res = await axios.post("/users/login", user);
-      myStorage.setItem("user", res.data.user.username);
+      myStorage.setItem("user", res.data.user.local.username);
       myStorage.setItem("token", res.data.token);
-      setCurrentUser(res.data.user.username);
+      setCurrentUser(res.data.user.local.username);
       navigate("/dashboard");
     } catch (err) {
       console.log(err);

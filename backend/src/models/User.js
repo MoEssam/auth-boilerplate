@@ -64,12 +64,12 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.statics.findByCredentials = async (username, password) => {
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ "local.username": username });
   if (!user) {
     throw new Error("Unable to login");
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user.local.password);
 
   if (!isMatch) {
     throw new Error("Unable to login");

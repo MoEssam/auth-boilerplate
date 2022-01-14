@@ -21,8 +21,8 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
-      req.body.username,
-      req.body.password
+      req.body.local.username,
+      req.body.local.password
     );
     const token = await user.generateAuthToken();
     res.send({ user, token });
