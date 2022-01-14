@@ -77,13 +77,22 @@ userSchema.statics.findByCredentials = async (username, password) => {
   return user;
 };
 
+userSchema.statics.findByEmail = async (email) => {
+  const user = await User.findOne({ "local.email": email });
+  if (!user) {
+    console.log("Email not found");
+    throw new Error("Unable to login");
+  }
+  return user;
+};
+
 //hide sensitive data like passwords and tokens
 userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
 
-  delete userObject.password;
-  delete userObject.tokens;
+  delete userObject.local.password;
+  delete userObject.local.tokens;
 
   return userObject;
 };
