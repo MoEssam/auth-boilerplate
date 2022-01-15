@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
     const token = await user.generateAuthToken();
 
     mailTransport().sendMail({
-      to: user.email,
+      to: user.local.email,
       from: "emailverification@email.com",
       subject: "Verify you email",
       html: `<h1>${OTP}</h1>`,
@@ -43,10 +43,9 @@ router.post("/verify-email", async (req, res) => {
   if (!isValidObjectId(userId)) return res.send("Invalid user id!");
 
   const user = await User.findById(userId);
-
   if (!user) return res.send("User is not found");
 
-  if (user.verified) return res.send("This user is already verified");
+  if (user.local.verified) return res.send("This user is already verified");
 
   const token = await VerificationToken.findOne({ owner: user._id });
 
@@ -54,13 +53,12 @@ router.post("/verify-email", async (req, res) => {
 
   const isMatched = await token.compareToken(otp);
   if (!isMatched) return res.send("please provide valid token");
-
-  user.verified = true;
+  user.local.verified = true;
   await VerificationToken.findByIdAndDelete(token._id);
   await user.save();
 
   mailTransport().sendMail({
-    to: user.email,
+    to: user.local.email,
     from: "emailverification@email.com",
     subject: "Email verified",
     html: "Thanks for verification",
