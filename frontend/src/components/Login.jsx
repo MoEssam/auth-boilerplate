@@ -38,6 +38,7 @@ export default function SignIn({ myStorage, setCurrentUser }) {
         const googleToken = JSON.parse(res.config.data);
         myStorage.setItem("user", res.data.google.name);
         myStorage.setItem("token", googleToken.token);
+        myStorage.setItem("picture", res.data.google.profilePicture);
         setCurrentUser(res.data.google.name);
         navigate("/dashboard");
       }

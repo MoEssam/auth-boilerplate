@@ -18,6 +18,7 @@ const pages = ["Products", "Pricing", "Blog"];
 const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
   const navigate = useNavigate();
   const currentUser = myStorage.getItem("user");
+  const profilePicture = myStorage.getItem("picture");
   console.log("current user is: ", currentUser);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -115,7 +116,7 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src={profilePicture} />
               </IconButton>
             </Tooltip>
             <Menu
