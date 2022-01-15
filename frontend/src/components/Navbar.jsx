@@ -26,6 +26,7 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
   const handleLogout = () => {
     myStorage.removeItem("user");
     myStorage.removeItem("token");
+    myStorage.removeItem("picture");
     setCurrentUser(null);
   };
 
