@@ -39,3 +39,5 @@ go to localhost:3000
 - [x] Email Verification
 - [ ] SMS Verification
 - [ ] Forget password
+- [ ] AWS cognito authentication
+- [ ] Firebase authentication
