@@ -33,6 +33,13 @@ export default function SignIn({ myStorage, setCurrentUser }) {
         myStorage.setItem("token", googleToken.token);
         setCurrentUser(res.data.newGoogleUser.google.name);
         navigate("/dashboard");
+      } else {
+        //link google account to local account
+        const googleToken = JSON.parse(res.config.data);
+        myStorage.setItem("user", res.data.google.name);
+        myStorage.setItem("token", googleToken.token);
+        setCurrentUser(res.data.google.name);
+        navigate("/dashboard");
       }
     } catch (err) {
       console.log(err);

@@ -81,7 +81,6 @@ userSchema.statics.findByEmail = async (email) => {
   const user = await User.findOne({ "local.email": email });
   if (!user) {
     console.log("Email not found");
-    throw new Error("Unable to login");
   }
   return user;
 };
