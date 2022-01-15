@@ -36,5 +36,6 @@ go to localhost:3000
 - [ ] Add profile photos
 - [ ] Update profile details
 - [ ] Admin functionality
-- [ ] Email Verification
+- [x] Email Verification
 - [ ] SMS Verification
+- [ ] Forget password
