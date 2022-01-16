@@ -6,12 +6,15 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
+import Firebase from "./components/Firebase";
 
 function App() {
   const myStorage = window.localStorage;
   const [currentUser, setCurrentUser] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [token, setToken] = useState("");
+
   const handleLogout = () => {
     myStorage.removeItem("user");
     setCurrentUser(null);
@@ -23,7 +26,11 @@ function App() {
       <Routes>
         <Route
           path="/dashboard"
-          element={<Dashboard myStorage={myStorage} />}
+          element={<Dashboard myStorage={myStorage} token={token} />}
+        />
+        <Route
+          path="/firebase"
+          element={<Firebase setToken={setToken} myStorage={myStorage} />}
         />
         <Route
           path="/"
