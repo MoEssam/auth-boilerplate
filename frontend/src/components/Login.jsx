@@ -15,11 +15,36 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login";
 
 const theme = createTheme();
 
 export default function SignIn({ myStorage, setCurrentUser }) {
   const navigate = useNavigate();
+
+  const responseFacebook = async (response) => {
+    const data = {
+      accessToken: response.accessToken,
+      userID: response.userID,
+    };
+
+    try {
+      const res = await axios.post("/users/facebook", data);
+      if (typeof res.data.local === "undefined") {
+        const facebookToken = JSON.parse(res.config.data);
+        myStorage.setItem("user", res.data.newFacebookUser.facebook.name);
+        myStorage.setItem("token", facebookToken.token);
+        myStorage.setItem(
+          "picture",
+          res.data.newFacebookUser.facebook.profilePicture
+        );
+        setCurrentUser(res.data.newFacebookUser.facebook.name);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const googleSuccess = async (googleData) => {
     const data = {
@@ -133,6 +158,11 @@ export default function SignIn({ myStorage, setCurrentUser }) {
               onSuccess={googleSuccess}
               onFailure={googleFailure}
               cookiePolicy={"single_host_origin"}
+            />
+            <FacebookLogin
+              appId="968979310698019"
+              fields="name,email,picture"
+              callback={responseFacebook}
             />
             <Grid container>
               <Grid item xs>

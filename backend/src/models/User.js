@@ -56,6 +56,13 @@ const userSchema = new mongoose.Schema(
       name: String,
       profilePicture: String,
     },
+    facebook: {
+      facebookId: String,
+      email: String,
+      name: String,
+      profilePicture: String,
+      token: String,
+    },
   },
   { timestamps: true }
 );

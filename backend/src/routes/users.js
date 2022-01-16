@@ -7,6 +7,7 @@ const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.CLIENT_ID);
 const { generateOTP, mailTransport } = require("../utils/mail");
 const { isValidObjectId } = require("mongoose");
+const axios = require("axios");
 
 router.post("/register", async (req, res) => {
   const user = new User(req.body);
@@ -76,6 +77,41 @@ router.post("/login", async (req, res) => {
     res.send({ user, token });
   } catch (e) {
     res.status(400).send();
+  }
+});
+
+router.post("/facebook", async (req, res) => {
+  const { userID, accessToken } = req.body;
+  console.log(req.body);
+  const urlGraphFacebook = `https://graph.facebook.com/v2.3/${userID}/?fields=id,name,email,picture&access_token=${accessToken}`;
+  try {
+    const response = await axios.get(urlGraphFacebook);
+    const facebookUser = {
+      facebook: {
+        email: response.data.email,
+        profilePicture: response.data.picture.data.url,
+        name: response.data.name,
+        facebbokId: response.data.id,
+      },
+    };
+    // console.log(facebookUser);
+    const user = await User.findByEmail(response.data.email);
+    if (user == null) {
+      const newFacebookUser = new User(facebookUser);
+      await newFacebookUser.save();
+      res.status(201).send({ newFacebookUser });
+    } else {
+      const linkFacebook = await User.findByIdAndUpdate(
+        { _id: user._id },
+        facebookUser,
+        {
+          new: true,
+        }
+      );
+      console.log("link user", linkFacebook);
+    }
+  } catch (e) {
+    console.log(e);
   }
 });
 
