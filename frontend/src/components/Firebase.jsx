@@ -27,10 +27,18 @@ export default function Firebase({ setToken, myStorage }) {
       if (userCred) {
         setAuth(true);
         myStorage.setItem("auth", "true");
+        console.log(userCred);
+        userCred.getIdToken().then((token) => {
+          console.log("hell", token);
+          setToken(token);
+        });
+
+        // const token = await userCred.getIdToken();
+        // console.log(token);
+        // userCred.getIdToken().then((token) => {
+        //   setToken(token);
+        // });
       }
-      userCred.getIdToken().then((token) => {
-        setToken(token);
-      });
     });
   }, []);
 
@@ -41,7 +49,7 @@ export default function Firebase({ setToken, myStorage }) {
         navigate("/dashboard")
       ) : (
         <StyledFirebaseAuth
-          // uiCallback={(ui) => ui.disableAutoSignIn()}
+          uiCallback={(ui) => ui.disableAutoSignIn()}
           uiConfig={uiConfig}
           firebaseAuth={firebase.auth()}
         />
