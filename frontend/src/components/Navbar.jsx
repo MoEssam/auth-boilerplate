@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = ["Profile", "Dashboard", "Firebase"];
 
 const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
   const navigate = useNavigate();
@@ -37,8 +37,8 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleCloseNavMenu = (page) => {
+    navigate(page);
   };
 
   const handleCloseUserMenu = () => {
@@ -55,7 +55,7 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
           >
-            LOGO
+            Authentication System
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -88,7 +88,7 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -106,7 +106,8 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                value={page}
+                onClick={(page) => handleCloseNavMenu(page.currentTarget.value)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
