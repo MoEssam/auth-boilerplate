@@ -3,6 +3,7 @@ require("./db/db");
 const express = require("express");
 const userRoute = require("./routes/users");
 const todoRoute = require("./routes/todo");
+const firebaseRoute = require("./routes/firebase");
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoute);
 app.use("/api", todoRoute);
+app.use("/api/firebase", firebaseRoute);
 
 app.listen(port, () => {
   console.log("Auth system listening at http://localhost:" + port);
