@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
@@ -37,21 +37,24 @@ function App() {
     }
   });
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <BrowserRouter>
       <Navbar myStorage={myStorage} setCurrentUser={setCurrentUser} />
       <Routes>
-        {!isLoggedIn && !isLoading ? (
-          <Route path="/" element={<FirebaseGoogle />} />
+        {!isLoggedIn ? (
+          <Route path="*" element={<Navigate to="/firebase" />} />
         ) : (
-          <Route path="/dashboard" element={<Dashboard token={token} />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
         )}
-
-        <Route path="/" element={<h1>Hello Moe</h1>} />
         <Route path="/firebase" element={<FirebaseGoogle />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard token={token} />} />
+        <Route path="*" element={<h1>no route hehe</h1>} />
       </Routes>
     </BrowserRouter>
   );
