@@ -2,9 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const middleware = require("../middleware/firebase-auth");
 
-router.get("/todos", middleware.decodeToken, async (req, res) => {
-  // console.log(req.headers.authorization);
-  console.log(req.user);
+router.get("/todos", middleware, async (req, res) => {
   res.json({
     todos: [
       {
