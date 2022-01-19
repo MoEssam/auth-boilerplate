@@ -7,35 +7,31 @@ import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
 import fire from "./firebase.js";
 import FirebaseGoogle from "./components/Firebase";
+import Profile from "./components/Profile";
 
 function App() {
   const myStorage = window.localStorage;
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   fire.auth().onAuthStateChanged((user) => {
-    return user ? setIsLoggedIn(true) : setIsLoggedIn(false);
+    return user
+      ? (setIsLoggedIn(true), setIsLoading(false))
+      : (setIsLoggedIn(false), setIsLoading(true));
   });
 
-  fire.auth().onAuthStateChanged((user) => {
-    return user ? setIsLoading(false) : setIsLoading(true);
-  });
-
-  fire.auth().onAuthStateChanged((user) => {
-    if (user) {
-      fire
-        .auth()
-        .currentUser.getIdToken()
-        .then((data) => setToken(data));
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-
-      console.log("onAuthStateChanged else");
-    }
-  });
+  useEffect(() => {
+    return fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        user
+          .getIdToken(true)
+          .then((latestToken) => setToken(latestToken))
+          .catch((err) => console.log(err));
+      }
+    });
+  }, []);
 
   if (isLoading) {
     return null;
@@ -50,10 +46,11 @@ function App() {
         ) : (
           <Route path="/" element={<Navigate to="/dashboard" />} />
         )}
-        <Route path="/firebase" element={<FirebaseGoogle />} />
+        <Route path="/firebase" element={<FirebaseGoogle token={token} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard token={token} />} />
+        <Route path="/profile" element={<Profile token={token} />} />
         <Route path="*" element={<h1>no route hehe</h1>} />
       </Routes>
     </BrowserRouter>
