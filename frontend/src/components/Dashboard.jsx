@@ -1,31 +1,60 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
+import fire from "../firebase";
 
-export default function Dashboard({ token }) {
+export default function Dashboard() {
   const [todos, setTodo] = useState("");
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await axios.get("/todos", {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        });
-        if (!data.data.todos) {
-          setIsFetching(true);
-        } else {
-          setIsFetching(false);
-          var result = data.data.todos.map((e) => e.title);
-          setTodo(result);
+    fire
+      .auth()
+      .currentUser.getIdToken()
+      .then((token) => {
+        async function fetchProfile() {
+          const data = await axios.get("/todos", {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          });
+          if (!data.data.todos) {
+            setIsFetching(true);
+          } else {
+            var result = data.data.todos.map((e) => e.title);
+            setIsFetching(false);
+            setTodo(result);
+          }
         }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    fetchData();
-  }, [token]);
+        fetchProfile();
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     if (!token) {
+  //       return null;
+  //     } else {
+  //       try {
+  //         const data = await axios.get("/todos", {
+  //           headers: {
+  //             Authorization: "Bearer " + token,
+  //           },
+  //         });
+  //         if (!data.data.todos) {
+  //           setIsFetching(true);
+  //         } else {
+  //           setIsFetching(false);
+  //           var result = data.data.todos.map((e) => e.title);
+  //           setTodo(result);
+  //         }
+  //       } catch (e) {
+  //         console.error(e);
+  //       }
+  //     }
+  //   }
+  //   fetchData();
+  // }, [token]);
 
   return (
     <div>
@@ -37,7 +66,10 @@ export default function Dashboard({ token }) {
           ))}
         </ol>
       ) : (
-        <h1>fetching data please wait</h1>
+        <div>
+          <CircularProgress />
+        </div>
+        // <h1>fetching data please wait</h1>
       )}
     </div>
   );

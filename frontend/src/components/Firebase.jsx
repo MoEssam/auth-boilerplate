@@ -1,39 +1,67 @@
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import fire from "../firebase";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 // Configure FirebaseUI.
 const uiConfig = {
-  // Popup signin flow rather than redirect flow.
   signInFlow: "popup",
-  // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-  signInSuccessUrl: "/dashboard",
-  // We will display Google and Facebook as auth providers.
   signInOptions: [
     fire.auth.GoogleAuthProvider.PROVIDER_ID,
     fire.auth.FacebookAuthProvider.PROVIDER_ID,
   ],
+  callbacks: {
+    signInSuccessWithAuthResult: () => false,
+  },
 };
 
-function FirebaseGoogle({ token }) {
-  const [profile, setProfile] = useState("");
+function FirebaseGoogle() {
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   fire
+  //     .auth()
+  //     .currentUser.getIdToken()
+  //     .then((token) => {
+  //       if (!token) {
+  //         return null;
+  //       } else {
+  //         const headers = {
+  //           Authorization: "Bearer " + token,
+  //         };
+  //       }
+  //       async function saveProfile() {
+  //         const data = await axios.post("/firebase/login", void 0, {
+  //           headers: {
+  //             Authorization: "Bearer " + token,
+  //           },
+  //         });
+  //         console.log(data);
+  //         navigate("/profile");
+  //       }
+  //       saveProfile();
+  //     });
+  // }, []);
 
   async function fetchData() {
-    if (!token) {
-      return null;
-    } else {
-      const headers = {
-        Authorization: "Bearer " + token,
-      };
-      try {
-        const data = await axios.post("/firebase/login", void 0, {
-          headers: headers,
-        });
-        setProfile(data);
-      } catch (e) {
-        console.error(e);
-      }
-    }
+    fire
+      .auth()
+      .currentUser.getIdToken()
+      .then((token) => {
+        if (!token) {
+          return null;
+        } else {
+          const headers = {
+            Authorization: "Bearer " + token,
+          };
+          const data = axios.post("/firebase/login", void 0, {
+            headers: headers,
+          });
+          console.log("moe2", data);
+          navigate("/profile");
+        }
+      });
   }
   fetchData();
 
