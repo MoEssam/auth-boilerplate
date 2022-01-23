@@ -1,14 +1,29 @@
-export default function Dashboard({ myStorage }) {
-  const user = myStorage.getItem("user");
-  const token = myStorage.getItem("token");
+import { useNavigate } from "react-router";
+import { useUserAuth } from "../context/UserAuthContext";
+import Button from "@mui/material/Button";
+
+const Dashboard = () => {
+  const { logOut, user } = useUserAuth();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
-    <div>
-      {token ? (
-        <h1>Hello {user}</h1>
-      ) : (
-        <p>You are not authorized, please log in</p>
-      )}
-      {/* Authentication System Dashboard */}
-    </div>
+    <>
+      <div>
+        Hello Welcome <br />
+        {user && user.email}
+      </div>
+      <div>
+        <Button onClick={handleLogout}>Log out</Button>
+      </div>
+    </>
   );
-}
+};
+
+export default Dashboard;

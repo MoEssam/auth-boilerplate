@@ -15,11 +15,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import GoogleLogin from "react-google-login";
+import { useUserAuth } from "../context/UserAuthContext";
+import GoogleButton from "react-google-button";
 
 const theme = createTheme();
 
 export default function SignIn({ myStorage, setCurrentUser }) {
   const navigate = useNavigate();
+  const { logIn, googleSignIn } = useUserAuth();
 
   const googleSuccess = async (googleData) => {
     const data = {
@@ -51,20 +54,45 @@ export default function SignIn({ myStorage, setCurrentUser }) {
     console.log(res);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const handleGoogleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   const user = {
+  //     local: {
+  //       username: data.get("username"),
+  //       password: data.get("password"),
+  //     },
+  //   };
+  //   try {
+  //     const res = await axios.post("/users/login", user);
+  //     myStorage.setItem("user", res.data.user.local.username);
+  //     myStorage.setItem("token", res.data.token);
+  //     setCurrentUser(res.data.user.local.username);
+  //     navigate("/dashboard");
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  const handleFirebaseSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
     const user = {
-      local: {
-        username: data.get("username"),
-        password: data.get("password"),
-      },
+      email: data.get("email"),
+      password: data.get("password"),
     };
     try {
-      const res = await axios.post("/users/login", user);
-      myStorage.setItem("user", res.data.user.local.username);
-      myStorage.setItem("token", res.data.token);
-      setCurrentUser(res.data.user.local.username);
+      await logIn(user.email, user.password);
       navigate("/dashboard");
     } catch (err) {
       console.log(err);
@@ -91,7 +119,8 @@ export default function SignIn({ myStorage, setCurrentUser }) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            //onSubmit={handleSubmit}
+            onSubmit={handleFirebaseSubmit}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -103,6 +132,16 @@ export default function SignIn({ myStorage, setCurrentUser }) {
               label="username"
               name="username"
               autoComplete="username"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="email"
+              name="email"
+              autoComplete="email"
               autoFocus
             />
             <TextField
@@ -132,8 +171,10 @@ export default function SignIn({ myStorage, setCurrentUser }) {
               buttonText="Sign in with Google"
               onSuccess={googleSuccess}
               onFailure={googleFailure}
+              onClick={googleSuccess}
               cookiePolicy={"single_host_origin"}
             />
+            <GoogleButton onClick={handleGoogleSignIn} type="dark" />
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
