@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       },
       password: {
         type: String,
-        //required: true,
+        required: true,
         min: 6,
         trim: true,
         validate(value) {
@@ -84,11 +84,9 @@ userSchema.statics.findByCredentials = async (username, password) => {
 };
 
 userSchema.statics.findByEmail = async (email) => {
-  const user = await User.findOne({ "local.email": email });
-  if (!user) {
-    console.log("Email not found");
-  }
-  return user;
+  const localUser = await User.findOne({ "local.email": email });
+  const googleUser = await User.findOne({ "google.email": email });
+  return { localUser, googleUser };
 };
 
 //hide sensitive data like passwords and tokens
