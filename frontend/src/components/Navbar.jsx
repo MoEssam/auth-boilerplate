@@ -12,22 +12,23 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
+import { useUserAuth } from "../context/UserAuthContext";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = ["Profile", "Dashboard", "Login", "Register"];
 
-const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
+const ResponsiveAppBar = () => {
   const navigate = useNavigate();
-  const currentUser = myStorage.getItem("user");
-  const profilePicture = myStorage.getItem("picture");
-  console.log("current user is: ", currentUser);
+  const { logOut, user } = useUserAuth();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleLogout = () => {
-    myStorage.removeItem("user");
-    myStorage.removeItem("token");
-    myStorage.removeItem("picture");
-    setCurrentUser(null);
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleOpenNavMenu = (event) => {
@@ -37,8 +38,8 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleCloseNavMenu = (page) => {
+    navigate(page);
   };
 
   const handleCloseUserMenu = () => {
@@ -106,7 +107,8 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                value={page}
+                onClick={(page) => handleCloseNavMenu(page.currentTarget.value)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
@@ -117,7 +119,7 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={profilePicture} />
+                <Avatar alt="Remy Sharp" src={user.photoURL} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -147,13 +149,12 @@ const ResponsiveAppBar = ({ myStorage, setCurrentUser }) => {
                   Dashboard
                 </Typography>
               </MenuItem>
-              {currentUser ? (
+              {user ? (
                 <MenuItem>
                   <Typography
                     textAlign="center"
                     onClick={() => {
                       handleLogout();
-                      navigate("/");
                       handleCloseUserMenu();
                     }}
                   >
