@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from "axios";
+// import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
 
@@ -18,26 +18,26 @@ const theme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { signUp, token } = useUserAuth();
+  const { signUp } = useUserAuth();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const newUser = {
-      local: {
-        username: data.get("username"),
-        email: data.get("email"),
-        password: data.get("password"),
-      },
-    };
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   const newUser = {
+  //     local: {
+  //       username: data.get("username"),
+  //       email: data.get("email"),
+  //       password: data.get("password"),
+  //     },
+  //   };
 
-    try {
-      await axios.post("/users/register", newUser);
-      alert("Success");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //   try {
+  //     await axios.post("/users/register", newUser);
+  //     alert("Success");
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const handleFirebaseSubmit = async (e) => {
     e.preventDefault();

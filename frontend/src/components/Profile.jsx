@@ -1,10 +1,7 @@
-import { useNavigate } from "react-router";
 import { useUserAuth } from "../context/UserAuthContext";
 
 const Profile = () => {
   const { user } = useUserAuth();
-  const navigate = useNavigate();
-
   return (
     <>
       <div>
@@ -12,7 +9,7 @@ const Profile = () => {
         {user && user.email}
       </div>
       <div>
-        <img src={user.photoURL} alt="user photo" />
+        <img src={user.photoURL} alt="user" />
       </div>
     </>
   );
